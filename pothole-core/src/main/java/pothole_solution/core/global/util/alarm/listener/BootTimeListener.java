@@ -21,7 +21,7 @@ public class BootTimeListener implements SpringApplicationRunListener {
         long millis = timeTaken.toMillis();
         String startupTime = String.valueOf(millis / 1000.0);
 
-        boolean isLocalServer = context.getEnvironment().matchesProfiles("manager-local | worker-local");
+        boolean isLocalServer = context.getEnvironment().matchesProfiles("manager-local | worker-local | consumer-local");
 
         if (!isLocalServer) {
             boolean isManagerDevServer = context.getEnvironment().matchesProfiles("manager-dev");
