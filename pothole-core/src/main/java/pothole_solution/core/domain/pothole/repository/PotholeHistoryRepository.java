@@ -22,18 +22,10 @@ public interface PotholeHistoryRepository extends JpaRepository<PotholeHistory, 
 
     @Query("select ph from PotholeHistory ph " +
             "join fetch ph.pothole p " +
-            "where ph.createdAt between :startDate and :endDate ")
-    List<PotholeHistory> findAllInPeriod(@Param("startDate") LocalDateTime startDate,
-                                         @Param("endDate") LocalDateTime endDate);
-
-//    @Query("select ph from PotholeHistory ph " +
-//            "join fetch ph.pothole p " +
-//            "where p.potholeId = :potholeId " +
-//                "and ph.createdAt between :startDate and :endDate " +
-//            "order by ph.createdAt desc ")
-//    List<PotholeHistory> findAllInPeriodByPotholeId(@Param("potholeId") Long potholeId,
-//                                                    @Param("startDate") LocalDate startDate,
-//                                                    @Param("endDate") LocalDate endDate);
+            "where ph.createdAt between :startDate and :endDate " +
+            "order by ph.createdAt desc")
+    List<PotholeHistory> findAllInPeriodOrderByCreatedAtDesc(@Param("startDate") LocalDateTime startDate,
+                                                             @Param("endDate") LocalDateTime endDate);
 
     @Query("select ph from PotholeHistory ph " +
             "join fetch ph.pothole p " +

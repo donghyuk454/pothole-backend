@@ -58,7 +58,7 @@ public class ReportServiceImpl implements ReportService {
         Map<Long, RespPotHistByPeriodDto> mapOfDtos = new HashMap<>();
 
         // 기간 내 변화가 있는 포트홀 히스토리 목록 추출
-        List<PotholeHistory> allHistoryInPeriod = potholeHistoryRepository.findAllInPeriod(startDate, endDate);
+        List<PotholeHistory> allHistoryInPeriod = potholeHistoryRepository.findAllInPeriodOrderByCreatedAtDesc(startDate, endDate);
         List<Long> potholeIds = allHistoryInPeriod.stream()
                 .map(potholeHistory -> potholeHistory.getPothole().getPotholeId())
                 .distinct() // 중복 제거
