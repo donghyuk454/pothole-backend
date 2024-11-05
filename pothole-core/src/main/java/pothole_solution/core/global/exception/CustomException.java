@@ -42,4 +42,6 @@ public class CustomException extends RuntimeException {
 
     // Report Exception
     public static final CustomException MISMATCH_PERIOD               = new CustomException(ExceptionStatus.MISMATCH_PERIOD);
+    public static final CustomException MISMATCH_CRITERIA               = new CustomException(ExceptionStatus.MISMATCH_CRITERIA);
+    public static final CustomException MISMATCH_REPORT_TYPE               = new CustomException(ExceptionStatus.MISMATCH_REPORT_TYPE);
 }

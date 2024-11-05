@@ -15,6 +15,7 @@ public class RespPotSimInfoPotMngrCntrDto {
     private double lon;
     private String thumbnail;
     private Integer importance;
+    private Integer dangerous;
     private Progress progressStatus;
 
     @Builder
@@ -25,6 +26,7 @@ public class RespPotSimInfoPotMngrCntrDto {
         this.lon = pothole.getPoint().getX();
         this.thumbnail = pothole.getThumbnail();
         this.importance = pothole.getImportance();
+        this.dangerous = pothole.getDangerous();
         this.progressStatus = pothole.getProcessStatus();
     }
 }

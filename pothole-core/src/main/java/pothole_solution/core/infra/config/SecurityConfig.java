@@ -36,9 +36,11 @@ public class SecurityConfig {
                         .maximumSessions(2)
                 )
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                        .requestMatchers(
+                        .requestMatchers( // 인증 예외 처리
                                 AntPathRequestMatcher.antMatcher("/pothole/v1/auth/**/join"),
                                 AntPathRequestMatcher.antMatcher("/pothole/v1/auth/**/login")).permitAll()
+                        .requestMatchers( // 포트홀 탐지 차량 예외 처리
+                                AntPathRequestMatcher.antMatcher("/pothole/v1/manager/detection/start")).permitAll()
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/pothole/v1/manager/**")).hasRole("MANAGER")
                         .requestMatchers(

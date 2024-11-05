@@ -9,12 +9,14 @@ public class PotFltPotMngrServDto {
     private Integer minImportance;
     private Integer maxImportance;
     private final Progress processStatus;
+    private final String roadName;
 
     @Builder
-    public PotFltPotMngrServDto(Integer minImportance, Integer maxImportance, Progress processStatus) {
+    public PotFltPotMngrServDto(Integer minImportance, Integer maxImportance, Progress processStatus, String roadName) {
         this.minImportance = minImportance;
         this.maxImportance = maxImportance;
         this.processStatus = processStatus;
+        this.roadName = roadName;
     }
 
     public void changeToAvailableImportance(Integer availableMinImportance, Integer availableMaxImportance) {

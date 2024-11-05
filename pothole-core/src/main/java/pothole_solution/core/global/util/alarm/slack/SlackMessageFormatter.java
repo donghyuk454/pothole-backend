@@ -5,7 +5,10 @@ import com.slack.api.model.block.LayoutBlock;
 import org.springframework.core.io.ClassPathResource;
 import pothole_solution.core.global.util.alarm.slack.dto.SlkPrInfoSlkMsgFmtrDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +92,69 @@ public class SlackMessageFormatter {
                     .url("")
                     .build();
         }
+    }
+
+    public List<LayoutBlock> buildStartDetectionMessage(LocalDateTime startupTime, HttpServletRequest request) {
+        List<LayoutBlock> layoutBlocks = new ArrayList<>();
+
+        leaveSpace(layoutBlocks);
+
+        // header
+        layoutBlocks.add(header(headerBlockBuilder -> headerBlockBuilder.text(plainText(":newspaper:  포트홀 탐지 차량 알림  :newspaper:"))));
+        layoutBlocks.add(divider());
+
+        // body
+
+        // title
+        layoutBlocks.add(section(section -> section.text(markdownText(":placard:  *Title*"))));
+        layoutBlocks.add(section(section -> section.text(markdownText("포트홀 탐지 차량 출발"))));
+        layoutBlocks.add(divider());
+
+        // time
+        String time = startupTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        layoutBlocks.add(section(section -> section.text(markdownText(":placard:  *시작 시간*"))));
+        layoutBlocks.add(section(section -> section.text(markdownText(time))));
+        layoutBlocks.add(divider());
+
+        // time
+        layoutBlocks.add(section(section -> section.text(markdownText(":placard:  *탐지 차량 IP*"))));
+        layoutBlocks.add(section(section -> section.text(markdownText(getClientIp(request)))));
+        layoutBlocks.add(divider());
+
+        // time
+        String statusEmoji = ":white_check_mark:";
+        layoutBlocks.add(section(section -> section.text(markdownText("*성공 여부*  |  " + statusEmoji))));
+        layoutBlocks.add(section(section -> section.text(markdownText("*담당자*     |  " + "신채호"))));
+
+        leaveSpace(layoutBlocks);
+        leaveSpace(layoutBlocks);
+
+        return layoutBlocks;
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+
+        if (ip == null || ip.length() == 0) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+
+        if (ip == null || ip.length() == 0) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+
+        if (ip == null || ip.length() == 0) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+
+        if (ip == null || ip.length() == 0) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+
+        if (ip == null || ip.length() == 0) {
+            ip = request.getRemoteAddr();
+        }
+
+        return ip;
     }
 }

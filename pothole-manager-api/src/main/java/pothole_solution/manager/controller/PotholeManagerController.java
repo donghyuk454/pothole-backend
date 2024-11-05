@@ -89,9 +89,10 @@ public class PotholeManagerController {
     @GetMapping("/potholes-filters")
     public BaseResponse<List<RespPotSimInfoPotMngrCntrDto>> getFilteredPotholes(@RequestParam(value = "minImportance", required = false) Integer minImportance,
                                                                                 @RequestParam(value = "maxImportance", required = false) Integer maxImportance,
-                                                                                @RequestParam(value = "potholeProgressStatus", required = false) Progress potholeProgressStatus) {
+                                                                                @RequestParam(value = "potholeProgressStatus", required = false) Progress potholeProgressStatus,
+                                                                                @RequestParam(value = "roadName", required = false) String roadName) {
 
-        List<Pothole> filteredPotholes = potholeManagerService.getFilteredPotholes(new PotFltPotMngrServDto(minImportance, maxImportance, potholeProgressStatus));
+        List<Pothole> filteredPotholes = potholeManagerService.getFilteredPotholes(new PotFltPotMngrServDto(minImportance, maxImportance, potholeProgressStatus, roadName));
 
         return new BaseResponse<>(filteredPotholes.stream()
                                                   .map(RespPotSimInfoPotMngrCntrDto::new)
