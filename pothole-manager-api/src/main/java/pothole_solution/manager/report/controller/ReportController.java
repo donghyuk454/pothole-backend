@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pothole_solution.core.global.util.response.BaseResponse;
-import pothole_solution.manager.report.dto.RespPotDngrCntByPeriodDto;
+import pothole_solution.manager.report.dto.RespPotCriteriaCntByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistByPeriodDto;
+import pothole_solution.manager.report.entity.ReportCriteria;
 import pothole_solution.manager.report.entity.ReportPeriod;
 import pothole_solution.manager.report.service.ReportService;
 
@@ -25,11 +26,12 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/pothole-report")
-    public BaseResponse<List<RespPotDngrCntByPeriodDto>> getPotDngrCntByPeriod(@RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                               @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                                                               @RequestParam(value = "reportPeriod") ReportPeriod reportPeriod) {
+    public BaseResponse<List<RespPotCriteriaCntByPeriodDto>> getPotDngrCntByPeriod(@RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                                   @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                                                   @RequestParam(value = "reportPeriod") ReportPeriod reportPeriod,
+                                                                                   @RequestParam(value = "criteria") ReportCriteria criteria) {
 
-        List<RespPotDngrCntByPeriodDto> periodPotholeCounts = reportService.getPeriodPotholeDangerousCount(startDate, endDate, reportPeriod);
+        List<RespPotCriteriaCntByPeriodDto> periodPotholeCounts = reportService.getPeriodPotholeCriteriaCount(startDate, endDate, reportPeriod, criteria);
 
         return new BaseResponse<>(periodPotholeCounts);
     }

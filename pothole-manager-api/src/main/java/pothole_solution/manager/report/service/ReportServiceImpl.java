@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pothole_solution.core.domain.pothole.entity.PotholeHistory;
 import pothole_solution.core.domain.pothole.repository.PotholeHistoryRepository;
-import pothole_solution.manager.report.dto.RespPotDngrCntByPeriodDto;
+import pothole_solution.manager.report.dto.RespPotCriteriaCntByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistWithDateDto;
+import pothole_solution.manager.report.entity.ReportCriteria;
 import pothole_solution.manager.report.entity.ReportPeriod;
 import pothole_solution.manager.report.repository.ReportQueryDslRepository;
 
@@ -32,11 +33,12 @@ public class ReportServiceImpl implements ReportService {
     private final PotholeHistoryRepository potholeHistoryRepository;
 
     @Override
-    public List<RespPotDngrCntByPeriodDto> getPeriodPotholeDangerousCount(LocalDate startDate, LocalDate endDate, ReportPeriod reportPeriod) {
+    public List<RespPotCriteriaCntByPeriodDto> getPeriodPotholeCriteriaCount(LocalDate startDate, LocalDate endDate,
+                                                                             ReportPeriod reportPeriod, ReportCriteria criteria) {
 
         String queryOfPeriod = getQueryOfPeriod(startDate, endDate, reportPeriod);
 
-        return reportRepository.getPotDngrCntByPeriod(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX), queryOfPeriod);
+        return reportRepository.getPotDngrCntByPeriod(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX), queryOfPeriod, criteria);
 
     }
 

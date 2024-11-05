@@ -8,7 +8,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import pothole_solution.manager.report.dto.RespPotDngrCntByPeriodDto;
+import pothole_solution.manager.report.dto.RespPotCriteriaCntByPeriodDto;
+import pothole_solution.manager.report.entity.ReportCriteria;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,16 +22,17 @@ import static pothole_solution.core.domain.pothole.entity.QPothole.pothole;
 public class ReportQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<RespPotDngrCntByPeriodDto> getPotDngrCntByPeriod(LocalDateTime startDate, LocalDateTime endDate, String queryOfPeriod) {
+    public List<RespPotCriteriaCntByPeriodDto> getPotDngrCntByPeriod(LocalDateTime startDate, LocalDateTime endDate,
+                                                                     String queryOfPeriod, ReportCriteria criteria) {
         return jpaQueryFactory
                 .select(
-                        Projections.constructor(RespPotDngrCntByPeriodDto.class,
+                        Projections.constructor(RespPotCriteriaCntByPeriodDto.class,
                                 convertDateFormat(queryOfPeriod),
-                                countDangerousBetween(1, 20),
-                                countDangerousBetween(21, 40),
-                                countDangerousBetween(41, 60),
-                                countDangerousBetween(61, 80),
-                                countDangerousBetween(81, 100)
+                                countCriteriaBetween(criteria, 1, 20),
+                                countCriteriaBetween(criteria, 21, 40),
+                                countCriteriaBetween(criteria, 41, 60),
+                                countCriteriaBetween(criteria, 61, 80),
+                                countCriteriaBetween(criteria, 81, 100)
                         )
                 )
                 .from(pothole)
@@ -46,12 +48,21 @@ public class ReportQueryDslRepository {
                     , pothole.createdAt);
     }
 
-    private static NumberExpression<Long> countDangerousBetween(int from, int to) {
-        return Expressions.cases()
-                .when(pothole.dangerous.between(from, to))
-                .then(1L)
-                .otherwise(0L)
-                .sum();
+    // TODO: 리펙토링 필요
+    private static NumberExpression<Long> countCriteriaBetween(ReportCriteria criteria, int from, int to) {
+        if (criteria == ReportCriteria.DANGER) {
+            return Expressions.cases()
+                    .when(pothole.dangerous.between(from, to))
+                    .then(1L)
+                    .otherwise(0L)
+                    .sum();
+        } else {
+            return Expressions.cases()
+                    .when(pothole.importance.between(from, to))
+                    .then(1L)
+                    .otherwise(0L)
+                    .sum();
+        }
     }
 
 }
