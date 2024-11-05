@@ -12,6 +12,7 @@ import pothole_solution.manager.report.dto.RespPotCriteriaCntByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistByPeriodDto;
 import pothole_solution.manager.report.entity.ReportCriteria;
 import pothole_solution.manager.report.entity.ReportPeriod;
+import pothole_solution.manager.report.entity.ReportType;
 import pothole_solution.manager.report.service.ReportService;
 
 import java.time.LocalDate;
@@ -26,14 +27,21 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/pothole-report")
-    public BaseResponse<List<RespPotCriteriaCntByPeriodDto>> getPotDngrCntByPeriod(@RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+    public BaseResponse<List<?>> getPotDngrCntByPeriod(@RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                                                    @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                                                                   @RequestParam(value = "reportPeriod") ReportPeriod reportPeriod,
-                                                                                   @RequestParam(value = "criteria") ReportCriteria criteria) {
+                                                                                   @RequestParam(value = "reportType") ReportType reportType,
+                                                                                   @RequestParam(value = "reportPeriod", required = false) ReportPeriod reportPeriod,
+                                                                                   @RequestParam(value = "criteria", required = false) ReportCriteria criteria) {
 
-        List<RespPotCriteriaCntByPeriodDto> periodPotholeCounts = reportService.getPeriodPotholeCriteriaCount(startDate, endDate, reportPeriod, criteria);
+        if (reportType == ReportType.COUNT) {
+            List<RespPotCriteriaCntByPeriodDto> periodPotholeCounts = reportService.getPeriodPotholeCriteriaCount(startDate, endDate, reportPeriod, criteria);
 
-        return new BaseResponse<>(periodPotholeCounts);
+            return new BaseResponse<>(periodPotholeCounts);
+        } else{
+            List<RespPotHistByPeriodDto> periodPotHists = reportService.getPeriodPotHist(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+
+            return new BaseResponse<>(periodPotHists);
+        }
     }
 
     @GetMapping("/pothole-report/history")

@@ -42,7 +42,8 @@ public enum ExceptionStatus {
 
     // Report exception
     MISMATCH_PERIOD(BAD_REQUEST, 6000, "존재하지 않는 기간입니다."),
-    MISMATCH_CRITERIA(BAD_REQUEST, 6001, "존재하지 않는 기준입니다.");
+    MISMATCH_CRITERIA(BAD_REQUEST, 6001, "존재하지 않는 기준입니다."),
+    MISMATCH_REPORT_TYPE(BAD_REQUEST, 6002, "존재하지 않는 레포트 타입입니다[COUNT, HISTORY].");
 
     private final HttpStatus httpStatus;
     private final int code;
