@@ -1,6 +1,7 @@
 package pothole_solution.core.domain.pothole.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,10 @@ import org.locationtech.jts.geom.GeometryFactory;
 import pothole_solution.core.domain.pothole.entity.Pothole;
 import pothole_solution.core.domain.pothole.entity.Progress;
 
-import java.util.Random;
-
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ReqPotRegPotMngrServDto {
     @NotNull(message = "위도의 값은 반드시 존재해야 합니다.")
     private double lat;
@@ -20,23 +21,19 @@ public class ReqPotRegPotMngrServDto {
     @NotNull(message = "경도의 값은 반드시 존재해야 합니다.")
     private double lon;
 
-    @Builder
-    public ReqPotRegPotMngrServDto(double lat, double lon) {
-        this.lat = lat;
-        this.lon = lon;
-    }
+    @NotNull(message = "중요도 값은 반드시 존재해야 합니다.")
+    private int importance;
+
+    @NotNull(message = "위험도 값은 반드시 존재해야 합니다.")
+    private int dangerous;
 
     public Pothole toPothole() {
         GeometryFactory geometryFactory = new GeometryFactory();
 
-        Integer randomImportance = new Random().nextInt(101);
-        Integer randomDangerous = new Random().nextInt(101);
-
         return Pothole.builder()
-                .roadName("강남로 1")
                 .point(geometryFactory.createPoint(new Coordinate(lon, lat)))
-                .importance(randomImportance)
-                .dangerous(randomDangerous)
+                .importance(importance)
+                .dangerous(dangerous)
                 .processStatus(Progress.REGISTER)
                 .build();
     }
