@@ -10,7 +10,7 @@ import pothole_solution.core.domain.pothole.entity.Progress;
 @NoArgsConstructor
 public class RespPotSimInfoPotMngrCntrDto {
     private Long potholeId;
-    private String roadName;
+    private String roadAddress;
     private double lat;
     private double lon;
     private String thumbnail;
@@ -21,7 +21,7 @@ public class RespPotSimInfoPotMngrCntrDto {
     @Builder
     public RespPotSimInfoPotMngrCntrDto(Pothole pothole) {
         this.potholeId = pothole.getPotholeId();
-        this.roadName = pothole.getRoadName();
+        this.roadAddress = pothole.getRoadAddress();
         this.lat = pothole.getPoint().getY();
         this.lon = pothole.getPoint().getX();
         this.thumbnail = pothole.getThumbnail();

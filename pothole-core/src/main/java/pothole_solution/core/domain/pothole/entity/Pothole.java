@@ -20,9 +20,10 @@ public class Pothole extends BaseTimeEntity {
     private Long potholeId;
 
     @Column(length = 50)
-    private String roadName;
-
-    private String addressName;
+    private String roadAddress;         // 전체 도로명 주소
+    private String roadName;            // 도로명
+    private String roadNumber;          // 도로 번호
+    private String zipCode;             // 우편 번호
 
     @Column(nullable = false, columnDefinition = "geography(Point, 4326)")
     private Point point;
@@ -31,25 +32,22 @@ public class Pothole extends BaseTimeEntity {
     private String thumbnail;
 
     private Integer importance;
+    private Integer dangerous;
 
     @Column(nullable = false, length = 5)
     @Convert(converter = ProgressEnumConverter.class)
     private Progress processStatus;
 
-    private Integer dangerous;
-
     @OneToMany(mappedBy = "pothole", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PotholeHistory> potholeHistories = new ArrayList<>();
 
     @Builder
-    public Pothole(String roadName, String addressName, Point point, String thumbnail, Integer importance, Progress processStatus, Integer dangerous) {
-        this.roadName = roadName;
-        this.addressName = addressName;
+    public Pothole(Point point, String thumbnail, Integer importance, Progress processStatus, Integer dangerous) {
         this.point = point;
         this.thumbnail = thumbnail;
         this.importance = importance;
-        this.processStatus = processStatus;
         this.dangerous = dangerous;
+        this.processStatus = processStatus;
     }
 
     public void changeProgress(Progress processStatus) {
@@ -62,5 +60,12 @@ public class Pothole extends BaseTimeEntity {
 
     public void changeThumbnail(String newThumbnail) {
         this.thumbnail = newThumbnail;
+    }
+
+    public void initAddress(String roadAddress, String roadName, String zipCode, String roadNumber) {
+        this.roadAddress = roadAddress;
+        this.roadName = roadName;
+        this.zipCode = zipCode;
+        this.roadNumber = roadNumber;
     }
 }
