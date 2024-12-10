@@ -26,14 +26,6 @@ public class PotholeManagerController {
     private final PotholeHistoryImageManagerService potholeHistoryImageManagerService;
     private final RoadAddressSearchService roadAddressSearchService;
 
-    @PostMapping("/test")
-    public BaseResponse<RoadAddress> registerPotholeTest(@Valid @RequestBody ReqPotRegPotMngrServDto reqPotRegPotMngrServDto){
-        String point = reqPotRegPotMngrServDto.getLat() + "," + reqPotRegPotMngrServDto.getLon();
-        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(point);
-
-        return new BaseResponse<>(roadAddress);
-    }
-
     //TODO: 엄밀히 따지면 core 쪽에 있어야 되는거 아닌가?
     @PostMapping
     public BaseResponse<RespPotSimInfoPotMngrCntrDto> registerPothole(@Valid @RequestPart(value = "registerPothole") ReqPotRegPotMngrServDto reqPotRegPotMngrServDto,
