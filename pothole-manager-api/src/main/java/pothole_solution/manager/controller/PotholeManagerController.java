@@ -10,10 +10,8 @@ import pothole_solution.core.domain.pothole.dto.request.ReqPotRegPotMngrServDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotDetsInfoPotMngrCntrDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotHistGetPotMngrCntrDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotSimInfoPotMngrCntrDto;
-import pothole_solution.core.domain.pothole.entity.Pothole;
-import pothole_solution.core.domain.pothole.entity.PotholeHistory;
-import pothole_solution.core.domain.pothole.entity.PotholeHistoryImage;
-import pothole_solution.core.domain.pothole.entity.Progress;
+import pothole_solution.core.domain.pothole.entity.*;
+import pothole_solution.core.domain.pothole.service.RoadAddressSearchService;
 import pothole_solution.core.global.util.response.BaseResponse;
 import pothole_solution.manager.service.PotholeHistoryImageManagerService;
 import pothole_solution.manager.service.PotholeManagerService;
@@ -26,12 +24,14 @@ import java.util.List;
 public class PotholeManagerController {
     private final PotholeManagerService potholeManagerService;
     private final PotholeHistoryImageManagerService potholeHistoryImageManagerService;
+    private final RoadAddressSearchService roadAddressSearchService;
 
+    //TODO: 엄밀히 따지면 core 쪽에 있어야 되는거 아닌가?
     @PostMapping
     public BaseResponse<RespPotSimInfoPotMngrCntrDto> registerPothole(@Valid @RequestPart(value = "registerPothole") ReqPotRegPotMngrServDto reqPotRegPotMngrServDto,
                                                                       @RequestPart(value = "registerPotholeImages") List<MultipartFile> registerPotholeImages){
 
-        Pothole pothole = potholeManagerService.registerPothole(reqPotRegPotMngrServDto.toPothole(), registerPotholeImages);
+        Pothole pothole = potholeManagerService.registerPothole(reqPotRegPotMngrServDto, registerPotholeImages);
 
         return new BaseResponse<>(new RespPotSimInfoPotMngrCntrDto(pothole));
     }

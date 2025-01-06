@@ -6,13 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pothole_solution.core.domain.pothole.dto.PotFltPotMngrServDto;
 import pothole_solution.core.domain.pothole.dto.request.ReqPotChgPrgsStusPotMngrServDto;
-import pothole_solution.core.domain.pothole.entity.Pothole;
-import pothole_solution.core.domain.pothole.entity.PotholeHistory;
-import pothole_solution.core.domain.pothole.entity.PotholeHistoryImage;
+import pothole_solution.core.domain.pothole.dto.request.ReqPotRegPotMngrServDto;
+import pothole_solution.core.domain.pothole.entity.*;
 import pothole_solution.core.domain.pothole.repository.PotholeHistoryImageRepository;
 import pothole_solution.core.domain.pothole.repository.PotholeHistoryRepository;
 import pothole_solution.core.domain.pothole.repository.PotholeQueryDslRepository;
 import pothole_solution.core.domain.pothole.repository.PotholeRepository;
+import pothole_solution.core.domain.pothole.service.RoadAddressSearchService;
 import pothole_solution.core.infra.s3.ImageService;
 
 import java.util.List;
@@ -28,10 +28,15 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
     private final PotholeHistoryImageRepository potholeHistoryImageRepository;
     private final PotholeQueryDslRepository potholeQueryDslRepository;
     private final ImageService imageService;
+    private final RoadAddressSearchService roadAddressSearchService;
 
     @Override
-    public Pothole registerPothole(Pothole pothole, List<MultipartFile> registerPotholeImages) {
+    public Pothole registerPothole(ReqPotRegPotMngrServDto reqPotRegPotMngrServDto, List<MultipartFile> registerPotholeImages) {
         // Pothole 저장
+        Pothole pothole = reqPotRegPotMngrServDto.toPothole();
+
+        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLon() + "," + reqPotRegPotMngrServDto.getLat());
+        pothole.initAddress(roadAddress.getText(), roadAddress.getStructure().getLevel4L(), roadAddress.getZipcode(), roadAddress.getStructure().getLevel4LC());
         potholeRepository.save(pothole);
 
         // 포트홀 등록 이미지 S3에 업로드 및 썸네일 설정
