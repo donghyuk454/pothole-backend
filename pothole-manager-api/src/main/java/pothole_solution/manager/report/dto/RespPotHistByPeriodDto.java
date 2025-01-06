@@ -9,25 +9,27 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RespPotHistByPeriodDto {
+public class RespPotHistByPeriodDto implements RespPotReportDto {
     Long potholeId;
     Progress previousProgress;
     Progress latestProgress;
     int historyTotalCount;
-    List<RespPotHistWithDateDto> respPotHistWithDateDtos;
+    List<RespPotHistWithDateDto> potholeHistories;
 
     public RespPotHistByPeriodDto(Long potholeId) {
         this.potholeId = potholeId;
-        respPotHistWithDateDtos = new ArrayList<>();
+        potholeHistories = new ArrayList<>();
         historyTotalCount = 0;
     }
 
-    public void setPreviousProgress(Progress previousProgress) {
-        this.previousProgress = previousProgress;
+    public void setPreviousProgressIfNull(Progress previousProgress) {
+        if (this.previousProgress == null)
+            this.previousProgress = previousProgress;
     }
 
-    public void setLatestProgress(Progress latestProgress) {
-        this.latestProgress = latestProgress;
+    public void setLatestProgressIfNull(Progress latestProgress) {
+        if (this.latestProgress == null)
+            this.latestProgress = latestProgress;
     }
 
     public void addTotalCount() {

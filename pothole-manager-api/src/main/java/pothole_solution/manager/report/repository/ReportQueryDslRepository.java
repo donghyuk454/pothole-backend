@@ -3,6 +3,7 @@ package pothole_solution.manager.report.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,18 @@ public class ReportQueryDslRepository {
 
     public List<RespPotCriteriaCntByPeriodDto> getPotDngrCntByPeriod(LocalDateTime startDate, LocalDateTime endDate,
                                                                      String queryOfPeriod, ReportCriteria criteria) {
+
+        NumberPath<Integer> searchCriteria = ReportCriteria.DANGER.equals(criteria) ? pothole.dangerous : pothole.importance;
+
         return jpaQueryFactory
                 .select(
                         Projections.constructor(RespPotCriteriaCntByPeriodDto.class,
                                 convertDateFormat(queryOfPeriod),
-                                countCriteriaBetween(criteria, 1, 20),
-                                countCriteriaBetween(criteria, 21, 40),
-                                countCriteriaBetween(criteria, 41, 60),
-                                countCriteriaBetween(criteria, 61, 80),
-                                countCriteriaBetween(criteria, 81, 100)
+                                countCriteriaBetween(searchCriteria, 1, 20),
+                                countCriteriaBetween(searchCriteria, 21, 40),
+                                countCriteriaBetween(searchCriteria, 41, 60),
+                                countCriteriaBetween(searchCriteria, 61, 80),
+                                countCriteriaBetween(searchCriteria, 81, 100)
                         )
                 )
                 .from(pothole)
@@ -48,21 +52,11 @@ public class ReportQueryDslRepository {
                     , pothole.createdAt);
     }
 
-    // TODO: 리펙토링 필요
-    private static NumberExpression<Long> countCriteriaBetween(ReportCriteria criteria, int from, int to) {
-        if (criteria == ReportCriteria.DANGER) {
-            return Expressions.cases()
-                    .when(pothole.dangerous.between(from, to))
-                    .then(1L)
-                    .otherwise(0L)
-                    .sum();
-        } else {
-            return Expressions.cases()
-                    .when(pothole.importance.between(from, to))
-                    .then(1L)
-                    .otherwise(0L)
-                    .sum();
-        }
+    private static NumberExpression<Long> countCriteriaBetween(NumberPath<Integer> criteria, int from, int to) {
+        return Expressions.cases()
+                .when(criteria.between(from, to))
+                .then(1L)
+                .otherwise(0L)
+                .sum();
     }
-
 }

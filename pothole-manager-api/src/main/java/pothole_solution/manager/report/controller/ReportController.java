@@ -28,20 +28,20 @@ public class ReportController {
 
     @GetMapping("/pothole-report")
     public BaseResponse<List<?>> getPotDngrCntByPeriod(@RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                                   @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                                                                   @RequestParam(value = "reportType") ReportType reportType,
-                                                                                   @RequestParam(value = "reportPeriod", required = false) ReportPeriod reportPeriod,
-                                                                                   @RequestParam(value = "criteria", required = false) ReportCriteria criteria) {
+                                                       @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                       @RequestParam(value = "reportType") ReportType reportType,
+                                                       @RequestParam(value = "reportPeriod", required = false) ReportPeriod reportPeriod,
+                                                       @RequestParam(value = "criteria", required = false) ReportCriteria criteria) {
 
         if (reportType == ReportType.COUNT) {
             List<RespPotCriteriaCntByPeriodDto> periodPotholeCounts = reportService.getPeriodPotholeCriteriaCount(startDate, endDate, reportPeriod, criteria);
 
             return new BaseResponse<>(periodPotholeCounts);
-        } else{
-            List<RespPotHistByPeriodDto> periodPotHists = reportService.getPeriodPotHist(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
-
-            return new BaseResponse<>(periodPotHists);
         }
+
+        List<RespPotHistByPeriodDto> periodPotHists = reportService.getPeriodPotHist(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+
+        return new BaseResponse<>(periodPotHists);
     }
 
     @GetMapping("/pothole-report/history")
