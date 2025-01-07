@@ -9,7 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.beans.factory.annotation.Value;
-import pothole_solution.common.message.BasicMessage;
+import pothole_solution.core.domain.pothole.dto.message.BasicMessage;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -60,6 +60,7 @@ public abstract class BasicConsumer<K, V, T extends BasicMessage> {
                 consumer.commitAsync();
             } catch (Exception e) {
                 e.printStackTrace();
+                log.error("Kafka Consumer Exception 발생 e: {}", e.getMessage());
                 break;
             }
         }

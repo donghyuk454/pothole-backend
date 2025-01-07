@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -13,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pothole_solution.detection.service.api.dto.CheckPotholeResponseDto;
 
 import java.io.IOException;
-import java.util.Objects;
 
 
 @Slf4j
@@ -23,15 +25,18 @@ public class PotholeCheckApiService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${pothole-detection.server.url}")
-    private String baseUrl;
+    @Value("${pothole-detection.server.uri}")
+    private String baseUri;
 
-    public boolean isPothole(MultipartFile file) {
-        ResponseEntity<CheckPotholeResponseDto> response = restTemplate.postForEntity(baseUrl + "/check", getRequest(file), CheckPotholeResponseDto.class);
+    public Boolean isPothole(MultipartFile file) {
+        ResponseEntity<CheckPotholeResponseDto> response = restTemplate.postForEntity(baseUri + "/check", getRequest(file), CheckPotholeResponseDto.class);
 
         CheckPotholeResponseDto responseBody = response.getBody();
 
-        return Objects.requireNonNull(responseBody).getIsPothole();
+        log.info("response : {}", responseBody.toString());
+        return true;
+
+//        return responseBody.getIsPothole();
     }
 
     private HttpEntity<MultiValueMap<String, Object>> getRequest(MultipartFile file) {

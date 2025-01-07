@@ -1,4 +1,4 @@
-package pothole_solution.common.message.image;
+package pothole_solution.core.domain.pothole.dto.message.image;
 
 import org.springframework.web.multipart.MultipartFile;
 
