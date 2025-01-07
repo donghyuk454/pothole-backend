@@ -11,6 +11,8 @@ import java.util.List;
 public interface PotholeManagerService {
     Pothole registerPothole(ReqPotRegPotMngrServDto reqPotRegPotMngrServDto, List<MultipartFile> potholeImages);
 
+    Pothole registerPothole(ReqPotRegPotMngrServDto reqPotRegPotMngrServDto, String videoLink);
+
     Pothole getPotholeWithPotholeHistoryByPotholeId(Long potholeId);
 
     List<Pothole> getAllPotholes();
