@@ -21,6 +21,14 @@ public class RespPotSimInfoPotMngrCntrDto {
     private Integer dangerous;
     private Progress progressStatus;
 
+    public RespPotSimInfoPotMngrCntrDto(double lat, double lon, String thumbnail, Integer importance, Integer dangerous) {
+        this.lat = lat;
+        this.lon = lon;
+        this.thumbnail = thumbnail;
+        this.importance = importance;
+        this.dangerous = dangerous;
+    }
+
     @Builder
     public RespPotSimInfoPotMngrCntrDto(Pothole pothole) {
         this.potholeId = pothole.getPotholeId();

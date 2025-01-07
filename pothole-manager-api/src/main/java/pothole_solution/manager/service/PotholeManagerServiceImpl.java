@@ -57,6 +57,26 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
         return pothole;
     }
 
+    @Override
+    public Pothole registerPothole(ReqPotRegPotMngrServDto reqPotRegPotMngrServDto, String videoLink) {
+        // Pothole 저장
+        Pothole pothole = reqPotRegPotMngrServDto.toPothole();
+
+        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLon() + "," + reqPotRegPotMngrServDto.getLat());
+        pothole.initAddress(roadAddress.getText(), roadAddress.getStructure().getLevel4L(), roadAddress.getZipcode(), roadAddress.getStructure().getLevel4LC());
+        potholeRepository.save(pothole);
+
+        // TODO: 포트홀 영상에서 대표 이미지 추출 및 저장
+
+        // PotholeHistory 생성
+        PotholeHistory potholeHistory = new PotholeHistory(pothole, pothole.getProcessStatus());
+        potholeHistoryRepository.save(potholeHistory);
+
+        // TODO: PotholeHistoryImage 생성
+
+        return pothole;
+    }
+
     private String uploadDirName(Long potholeId, String progressStatus) {
         return potholeId + "/" + progressStatus;
     }

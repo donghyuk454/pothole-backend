@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RespPotCriteriaCntByPeriodDto {
+public class RespPotCriteriaCntByPeriodDto implements RespPotReportDto {
     String period;
     Long criteria0to20;
     Long criteria20to40;

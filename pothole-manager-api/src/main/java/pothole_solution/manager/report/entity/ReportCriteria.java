@@ -8,7 +8,7 @@ import pothole_solution.core.global.exception.CustomException;
 @AllArgsConstructor
 public enum ReportCriteria {
     DANGER("dangerous", "위험도"),
-    IMPORT("importance", "중요도");
+    IMPORTANCE("importance", "중요도");
 
     private final String eng;
     private final String kor;
