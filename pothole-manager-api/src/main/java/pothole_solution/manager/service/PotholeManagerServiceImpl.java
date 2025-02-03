@@ -35,8 +35,13 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
         // Pothole 저장
         Pothole pothole = reqPotRegPotMngrServDto.toPothole();
 
-        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLon() + "," + reqPotRegPotMngrServDto.getLat());
-        pothole.initAddress(roadAddress.getText(), roadAddress.getStructure().getLevel4L(), roadAddress.getZipcode(), roadAddress.getStructure().getLevel4LC());
+        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLat(), reqPotRegPotMngrServDto.getLon());
+        if (roadAddress == null) {
+            String unknown = "UNKNOWN";
+            pothole.initAddress(unknown, unknown, unknown, unknown);
+        } else {
+            pothole.initAddress(roadAddress.getText(), roadAddress.getStructure().getLevel4L(), roadAddress.getZipcode(), roadAddress.getStructure().getLevel4LC());
+        }
         potholeRepository.save(pothole);
 
         // 포트홀 등록 이미지 S3에 업로드 및 썸네일 설정
@@ -62,7 +67,7 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
         // Pothole 저장
         Pothole pothole = reqPotRegPotMngrServDto.toPothole();
 
-        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLon() + "," + reqPotRegPotMngrServDto.getLat());
+        RoadAddress roadAddress = roadAddressSearchService.getRoadAddress(reqPotRegPotMngrServDto.getLat(), reqPotRegPotMngrServDto.getLon());
         pothole.initAddress(roadAddress.getText(), roadAddress.getStructure().getLevel4L(), roadAddress.getZipcode(), roadAddress.getStructure().getLevel4LC());
         potholeRepository.save(pothole);
 
