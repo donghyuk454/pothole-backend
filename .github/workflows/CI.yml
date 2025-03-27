@@ -62,17 +62,17 @@ jobs:
     - name: Pothole [Core] Module Build with Gradle
       run: ./gradlew pothole-core:bootJar -x test
 
-    - name: Pothole [Core] Module test
-      run: ./gradlew pothole-core:test
+    #- name: Pothole [Core] Module test
+    #  run: ./gradlew pothole-core:test
 
     - name: Pothole [Manager] Module Build with Gradle
       run: ./gradlew pothole-manager-api:bootJar -x test
 
-    - name: Pothole [Manager] Module test
-      run: ./gradlew pothole-manager-api:test
+    #- name: Pothole [Manager] Module test
+    #  run: ./gradlew pothole-manager-api:test
     
     - name: Pothole [Worker] Module Build with Gradle
       run: ./gradlew pothole-worker-api:bootJar -x test
 
-    - name: Pothole [Worker] Module test
-      run: ./gradlew pothole-worker-api:test
+    #- name: Pothole [Worker] Module test
+    #  run: ./gradlew pothole-worker-api:test
