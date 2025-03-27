@@ -12,14 +12,11 @@ import pothole_solution.manager.report.dto.RespPotHistByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistWithDateDto;
 import pothole_solution.manager.report.entity.ReportCriteria;
 import pothole_solution.manager.report.entity.ReportPeriod;
-import pothole_solution.manager.report.repository.ReportQueryDslRepository;
+import pothole_solution.manager.report.repository.ReportRepositoryImpl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,7 +24,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
-    private final ReportQueryDslRepository reportRepository;
+    private final ReportRepositoryImpl reportRepository;
     private final PotholeHistoryRepository potholeHistoryRepository;
 
     @Override
@@ -36,7 +33,11 @@ public class ReportServiceImpl implements ReportService {
 
         String queryOfPeriod = reportPeriod.getQueryOfPeriodWithDate(startDate, endDate);
 
-        return reportRepository.getPotDngrCntByPeriod(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX), queryOfPeriod, criteria);
+        List<RespPotCriteriaCntByPeriodDto> defaultList = getDefaultCriteriaCounts(startDate, endDate, queryOfPeriod);
+
+        List<RespPotCriteriaCntByPeriodDto> reportResult = reportRepository.getPotDngrCntByPeriod(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX), queryOfPeriod, criteria);
+
+        return mergeList(defaultList, reportResult);
     }
 
     @Override
@@ -78,7 +79,6 @@ public class ReportServiceImpl implements ReportService {
         return new ArrayList<>(responseDict.values());
     }
 
-
     private static Long getPotholeIdByHistory(PotholeHistory previousHistory) {
         return previousHistory.getPothole().getPotholeId();
     }
@@ -92,4 +92,72 @@ public class ReportServiceImpl implements ReportService {
         );
     }
 
+    private static List<RespPotCriteriaCntByPeriodDto> getDefaultCriteriaCounts(LocalDate startDate, LocalDate endDate, String queryPeriod) {
+        String monthly = ReportPeriod.MONTHLY.getQueryOfPeriod();
+        String weekly = ReportPeriod.WEEKLY.getQueryOfPeriod();
+
+        if (monthly.equals(queryPeriod)) {
+            return generateMonthlyCounts(startDate, endDate);
+        } else if (weekly.equals(queryPeriod)) {
+            return generateWeeklyCounts(startDate, endDate);
+        }
+
+        return generateDailyCounts(startDate, endDate);
+    }
+
+    private static RespPotCriteriaCntByPeriodDto createZeroCriteriaCntDto(String period) {
+        return new RespPotCriteriaCntByPeriodDto(period, 0L, 0L,0L,0L, 0L);
+    }
+
+    private static List<RespPotCriteriaCntByPeriodDto> generateMonthlyCounts(LocalDate startDate, LocalDate endDate) {
+        List<RespPotCriteriaCntByPeriodDto> result = new ArrayList<>();
+
+        LocalDate monthCursor = startDate.withDayOfMonth(1);
+        while (!monthCursor.isAfter(endDate)) {
+            result.add(createZeroCriteriaCntDto(monthCursor.format(DateTimeFormatter.ofPattern("yyyy-MM"))));
+            monthCursor = monthCursor.plusMonths(1);
+        }
+
+        return result;
+    }
+
+    private static List<RespPotCriteriaCntByPeriodDto> generateWeeklyCounts(LocalDate startDate, LocalDate endDate) {
+        List<RespPotCriteriaCntByPeriodDto> result = new ArrayList<>();
+
+        LocalDate weekCursor = startDate;
+        while (!weekCursor.isAfter(endDate)) {
+            YearMonth currentMonth = YearMonth.from(weekCursor);
+            if (currentMonth.equals(YearMonth.from(weekCursor.with(DayOfWeek.MONDAY)))) {
+                String yearMonth = currentMonth.toString();
+                int weekOfMonth = (weekCursor.getDayOfMonth() - 1) / 7 + 1;
+                result.add(createZeroCriteriaCntDto(yearMonth + "-" + weekOfMonth));
+            }
+            weekCursor = weekCursor.plusWeeks(1);
+        }
+
+        return result;
+    }
+
+    private static List<RespPotCriteriaCntByPeriodDto> generateDailyCounts(LocalDate startDate, LocalDate endDate) {
+        List<RespPotCriteriaCntByPeriodDto> result = new ArrayList<>();
+
+        LocalDate dayCursor = startDate;
+        while (!dayCursor.isAfter(endDate)) {
+            result.add(createZeroCriteriaCntDto(dayCursor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            dayCursor = dayCursor.plusDays(1);
+        }
+
+        return result;
+    }
+
+    private List<RespPotCriteriaCntByPeriodDto> mergeList(List<RespPotCriteriaCntByPeriodDto> baseList, List<RespPotCriteriaCntByPeriodDto> newList) {
+        Map<String, RespPotCriteriaCntByPeriodDto> mergedMap = new HashMap<>();
+
+        baseList.forEach(item -> mergedMap.put(item.getPeriod(), item));
+        newList.forEach(item -> mergedMap.put(item.getPeriod(), item));
+
+        return mergedMap.values().stream()
+                .sorted(Comparator.comparing(RespPotCriteriaCntByPeriodDto::getPeriod))
+                .toList();
+    }
 }

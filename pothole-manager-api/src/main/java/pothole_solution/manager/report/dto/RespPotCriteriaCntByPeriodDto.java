@@ -2,7 +2,9 @@ package pothole_solution.manager.report.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @AllArgsConstructor
 public class RespPotCriteriaCntByPeriodDto implements RespPotReportDto {

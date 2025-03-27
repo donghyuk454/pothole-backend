@@ -29,7 +29,7 @@ public enum ReportPeriod {
     }
 
     public String getQueryOfPeriodWithDate(LocalDate startDate, LocalDate endDate) {
-        if (isAuto()) {
+        if (!isAuto()) {
             return this.getQueryOfPeriod();
         }
 
