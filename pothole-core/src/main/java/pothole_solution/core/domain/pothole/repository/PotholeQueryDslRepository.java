@@ -64,7 +64,7 @@ public class PotholeQueryDslRepository {
 
         // 도로명 입력
         if (roadName != null && !roadName.isBlank()) {
-            booleanBuilder.and(pothole.roadAddress.eq(roadName));
+            booleanBuilder.and(pothole.roadAddress.contains(roadName));
         }
 
         return booleanBuilder;
