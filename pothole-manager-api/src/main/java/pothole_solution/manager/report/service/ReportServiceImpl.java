@@ -12,7 +12,7 @@ import pothole_solution.manager.report.dto.RespPotHistByPeriodDto;
 import pothole_solution.manager.report.dto.RespPotHistWithDateDto;
 import pothole_solution.manager.report.entity.ReportCriteria;
 import pothole_solution.manager.report.entity.ReportPeriod;
-import pothole_solution.manager.report.repository.ReportRepositoryImpl;
+import pothole_solution.manager.report.repository.ReportRepository;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
-    private final ReportRepositoryImpl reportRepository;
+    private final ReportRepository reportRepository;
     private final PotholeHistoryRepository potholeHistoryRepository;
 
     @Override

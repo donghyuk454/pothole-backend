@@ -8,6 +8,7 @@ import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import pothole_solution.manager.report.dto.RespPotCriteriaCntByPeriodDto;
 import pothole_solution.manager.report.entity.ReportCriteria;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import static pothole_solution.core.domain.pothole.entity.QPothole.pothole;
 
 @Slf4j
+@Repository
 @RequiredArgsConstructor
 public class ReportRepositoryImpl implements ReportRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
