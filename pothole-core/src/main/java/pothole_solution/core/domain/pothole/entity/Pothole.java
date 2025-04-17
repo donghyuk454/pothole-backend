@@ -22,8 +22,7 @@ public class Pothole extends BaseTimeEntity {
     @Column(length = 50)
     private String roadAddress;         // 전체 도로명 주소
     private String roadName;            // 도로명
-    private String roadNumber;          // 도로 번호
-    private String zipCode;             // 우편 번호
+    private String roadCode;            // 도로 코드
 
     @Column(nullable = false, columnDefinition = "geography(Point, 4326)")
     private Point point;
@@ -62,10 +61,9 @@ public class Pothole extends BaseTimeEntity {
         this.thumbnail = newThumbnail;
     }
 
-    public void initAddress(String roadAddress, String roadName, String zipCode, String roadNumber) {
+    public void initAddress(String roadAddress, String roadName, String roadCode) {
         this.roadAddress = roadAddress;
         this.roadName = roadName;
-        this.zipCode = zipCode;
-        this.roadNumber = roadNumber;
+        this.roadCode = roadCode;
     }
 }
