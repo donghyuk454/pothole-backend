@@ -15,7 +15,6 @@ public class RoadAddressInfoServiceImpl implements RoadAddressInfoService {
     @Transactional(readOnly = true)
     @Override
     public List<String> getRoadCodeByRoadName(String roadName) {
-        // TODO: Pothole 컬럼명 및 zipcode 컬럼 삭제하면 끝남!
         return roadAddressInfoRepository.findRoadCodesByRoadName(roadName);
     }
 }

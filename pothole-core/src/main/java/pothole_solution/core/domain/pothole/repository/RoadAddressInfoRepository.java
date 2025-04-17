@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import pothole_solution.core.domain.pothole.entity.RoadAddressInfo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoadAddressInfoRepository extends JpaRepository<RoadAddressInfo, RoadAddressInfo.RoadAddressInfoId>  {
     @Query("select distinct rai.roadAddressInfoId.road_code " +
