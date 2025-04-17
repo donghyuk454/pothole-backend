@@ -22,7 +22,7 @@ public class PotholeQueryDslRepository {
                 .where(
                         getImportanceFilter(potFltPotMngrServDto.getMinImportance(), potFltPotMngrServDto.getMaxImportance()),
                         getProgressFilter(potFltPotMngrServDto.getProcessStatus()),
-                        getRoadNameFilter(potFltPotMngrServDto.getRoadName())
+                        getRoadCodeFilter(potFltPotMngrServDto.getRoadCode())
                 )
                 .fetch();
     }
@@ -59,12 +59,12 @@ public class PotholeQueryDslRepository {
         return booleanBuilder;
     }
 
-    private BooleanBuilder getRoadNameFilter(String roadName) {
+    private BooleanBuilder getRoadCodeFilter(List<String> roadCodes) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         // 도로명 입력
-        if (roadName != null && !roadName.isBlank()) {
-            booleanBuilder.and(pothole.roadAddress.contains(roadName));
+        if (roadCodes != null && !roadCodes.isEmpty()) {
+            booleanBuilder.and(pothole.roadCode.in(roadCodes));
         }
 
         return booleanBuilder;
