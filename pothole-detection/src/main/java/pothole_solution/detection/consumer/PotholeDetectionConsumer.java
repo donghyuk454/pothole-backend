@@ -1,6 +1,7 @@
 package pothole_solution.detection.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import pothole_solution.detection.message.PotholeDetectionMessage;
 import pothole_solution.detection.producer.PotholeMessageProducer;
 import pothole_solution.detection.service.PotholeDetectionEventService;
 import pothole_solution.detection.service.api.PotholeCheckApiService;
+import pothole_solution.detection.service.api.dto.CheckPotholeResponseDto;
 import pothole_solution.detection.service.dto.PotholeVideoFileDto;
 
 import java.time.LocalDateTime;
@@ -69,14 +71,16 @@ public class PotholeDetectionConsumer extends BasicConsumer<String, String, Poth
         PotholeVideoFileDto videoDto = new PotholeVideoFileDto(uuid, convertBase64ToMultipartFile(base64Video, createFileName(now, messageId, uuid)));
 
         // 포트홀일 경우만 저장
-        boolean isPothole = potholeCheckApiService.isPothole(videoDto.getVideo());
-        if (isPothole) {
+        CheckPotholeResponseDto responseDto = potholeCheckApiService.isPothole(videoDto.getVideo());
+        if (Boolean.TRUE.equals(responseDto.getIsPothole())) {
             // 이벤트 저장
             eventService.saveEventWithImages(message.getContent(), videoDto);
 
             // 포트홀 생성 매시지 Produce
             PotholeCreationMessage creationMessage = getPotholeCreationMessage(message, detectionContent, videoDto);
             producePotholeCreationMessage(creationMessage);
+        } else {
+            log.info("포트홀 아님");
         }
     }
 
@@ -106,6 +110,13 @@ public class PotholeDetectionConsumer extends BasicConsumer<String, String, Poth
             potholeMessageProducer.sendMessage("pothole-creation", message.getId(), jsonMessage);
         } catch (JsonProcessingException e) {
             throw CustomException.INVALID_PARAMETER;
+        }
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        if (consumer != null) {
+            consumer.close();
         }
     }
 }
