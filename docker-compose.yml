@@ -11,6 +11,11 @@ services:
     ports:
       - "8082:8082"
 
+  pothole-detection-api:
+    image: pothole-detection-api
+    ports:
+      - "28081:28081"
+
   session-redis:
     image: redis:alpine
     container_name: session-redis
@@ -22,3 +27,7 @@ services:
       - /etc/redis/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
     restart: always
+
+networks:
+  kafka-net:
+    driver: bridge
