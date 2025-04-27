@@ -24,8 +24,9 @@ public class BootFailureListener implements ApplicationListener<ApplicationFaile
 
             if (!isLocalServer()) {
                 boolean isManagerDevServer = new ClassPathResource("application-manager-dev.yml").exists();
+                boolean isDetectionDevServer = new ClassPathResource("application-detection-dev.yml").exists();
 
-                String serverName = isManagerDevServer ? MANAGER_SERVER : WORKER_SERVER;
+                String serverName = isManagerDevServer ? MANAGER_SERVER : (isDetectionDevServer ? DETECTION_SERVER : WORKER_SERVER);
 
                 List<LayoutBlock> layoutBlocks = new SlackMessageFormatter().buildBootMessageFormat(serverName, FAILURE_STARTUP_TIME, false);
                 slackService.sendMessage(POTHOLE_SERVER_DEPLOY, POTHOLE_SERVER_DEPLOY_PREVIEW_MSG, layoutBlocks);
@@ -48,7 +49,8 @@ public class BootFailureListener implements ApplicationListener<ApplicationFaile
     private boolean isLocalServer() {
         boolean isManagerLocalServer = new ClassPathResource("application-manager-local.yml").exists();
         boolean isWorkerLocalServer = new ClassPathResource("application-worker-local.yml").exists();
+        boolean isDetectionLocalServer = new ClassPathResource("application-detection-local.yml").exists();
 
-        return isManagerLocalServer || isWorkerLocalServer;
+        return isManagerLocalServer || isWorkerLocalServer || isDetectionLocalServer;
     }
 }

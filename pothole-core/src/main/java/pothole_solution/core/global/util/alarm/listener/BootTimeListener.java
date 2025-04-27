@@ -21,7 +21,7 @@ public class BootTimeListener implements SpringApplicationRunListener {
         long millis = timeTaken.toMillis();
         String startupTime = String.valueOf(millis / 1000.0);
 
-        boolean isLocalServer = context.getEnvironment().matchesProfiles("manager-local | worker-local | consumer-local");
+        boolean isLocalServer = context.getEnvironment().matchesProfiles("manager-local | worker-local | detection-local");
 
         boolean isTest = context.getEnvironment().matchesProfiles("test");
 
@@ -31,7 +31,8 @@ public class BootTimeListener implements SpringApplicationRunListener {
 
         if (!isLocalServer) {
             boolean isManagerDevServer = context.getEnvironment().matchesProfiles("manager-dev");
-            String serverName = isManagerDevServer ? MANAGER_SERVER : WORKER_SERVER;
+            boolean isDetectionDevServer = context.getEnvironment().matchesProfiles("detection-dev");
+            String serverName = isManagerDevServer ? MANAGER_SERVER : (isDetectionDevServer ? DETECTION_SERVER : WORKER_SERVER);
 
             List<LayoutBlock> layoutBlocks = new SlackMessageFormatter().buildBootMessageFormat(serverName, startupTime, true);
             slackService.sendMessage(POTHOLE_SERVER_DEPLOY, POTHOLE_SERVER_DEPLOY_PREVIEW_MSG, layoutBlocks);
