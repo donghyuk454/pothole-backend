@@ -9,6 +9,7 @@ public class SlackConstant {
     // server name
     public static final String MANAGER_SERVER = "Manager";
     public static final String WORKER_SERVER = "Worker";
+    public static final String DETECTION_SERVER = "Detection";
 
     // preview message
     public static final String POTHOLE_SERVER_DEPLOY_PREVIEW_MSG = ":loudspeaker:  포트홀 서버가 배포되었습니다. 배포된 내용을 확인해주세요.";

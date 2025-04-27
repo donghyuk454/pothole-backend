@@ -51,6 +51,18 @@ jobs:
         touch ./application-worker-dev.yml
         echo "${{ secrets.WORKER_APPLICATION_DEV_YML }}" > ./application-worker-dev.yml
 
+    - name: Pothole Detection application.yml 생성
+      shell: bash
+      run: |
+        mkdir -p ./pothole-detection-api/src/main/resources
+        cd ./pothole-detection-api/src/main/resources
+        
+        touch ./application.yml
+        echo "${{ secrets.DETECTION_APPLICATION_YML }}" > ./application.yml
+        
+        touch ./application-detection-dev.yml
+        echo "${{ secrets.DETECTION_APPLICATION_DEV_YML }}" > ./application-detection-dev.yml
+
     - name: check yml config validation
       shell: bash
       run: |
@@ -76,3 +88,9 @@ jobs:
 
     #- name: Pothole [Worker] Module test
     #  run: ./gradlew pothole-worker-api:test
+
+    - name: Pothole [Detection] Module Build with Gradle
+      run: ./gradlew pothole-detection-api:bootJar -x test
+
+    #- name: Pothole [Detection] Module test
+    #  run: ./gradlew pothole-detection-consumer:test
