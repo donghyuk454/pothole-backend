@@ -23,6 +23,10 @@ on:
         required: true
       WORKER_APPLICATION_DEV_YML:
         required: true
+      DETECTION_APPLICATION_YML:
+        required: true
+      DETECTION_APPLICATION_DEV_YML:
+        required: true
 
 jobs:
   build:
@@ -87,11 +91,24 @@ jobs:
           touch ./application-worker-dev.yml
           echo "${{ secrets.WORKER_APPLICATION_DEV_YML }}" > ./application-worker-dev.yml
 
+      - name: Pothole Detection application.yml 생성
+        shell: bash
+        run: |
+          mkdir -p ./pothole-detection-api/src/main/resources
+          cd ./pothole-detection-api/src/main/resources
+          
+          touch ./application.yml
+          echo "${{ secrets.DETECTION_APPLICATION_YML }}" > ./application.yml
+          
+          touch ./application-detection-dev.yml
+          echo "${{ secrets.DETECTION_APPLICATION_DEV_YML }}" > ./application-detection-dev.yml
+
       - name: pothole all build
         run: |
           ./gradlew clean pothole-core:bootJar -x test
           ./gradlew pothole-manager-api:bootJar -x test
           ./gradlew pothole-worker-api:bootJar -x test
+          ./gradlew pothole-detection-consumer:bootJar -x test
 
       - name: Core jar 파일 업로드
         uses: actions/upload-artifact@v4
@@ -110,6 +127,12 @@ jobs:
         with:
           name: pothole-worker-artifact
           path: ./pothole-worker-api/build/libs/*.jar
+
+      - name: Pothole Detection jar 파일 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: pothole-detection-artifact
+          path: ./pothole-detection-api/build/libs/*.jar
 
       - name: 현재 디렉토리 출력
         run: |

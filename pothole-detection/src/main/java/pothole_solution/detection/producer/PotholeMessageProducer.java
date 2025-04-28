@@ -1,5 +1,6 @@
 package pothole_solution.detection.producer;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -23,5 +24,12 @@ public class PotholeMessageProducer {
                 log.error("Topic : {}, Exception : {}", metadata.topic(), exception, exception);
             }
         });
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        if (kafkaProducer != null) {
+            kafkaProducer.close();
+        }
     }
 }

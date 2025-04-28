@@ -25,18 +25,13 @@ public class PotholeCheckApiService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${pothole-detection.server.uri}")
+    @Value("${pothole-ai.server.uri}")
     private String baseUri;
 
-    public Boolean isPothole(MultipartFile file) {
-        ResponseEntity<CheckPotholeResponseDto> response = restTemplate.postForEntity(baseUri + "/check", getRequest(file), CheckPotholeResponseDto.class);
+    public CheckPotholeResponseDto isPothole(MultipartFile file) {
+        ResponseEntity<CheckPotholeResponseDto> response = restTemplate.postForEntity(baseUri + "/predict", getRequest(file), CheckPotholeResponseDto.class);
 
-        CheckPotholeResponseDto responseBody = response.getBody();
-
-        log.info("response : {}", responseBody.toString());
-        return true;
-
-//        return responseBody.getIsPothole();
+        return response.getBody();
     }
 
     private HttpEntity<MultiValueMap<String, Object>> getRequest(MultipartFile file) {
@@ -53,7 +48,7 @@ public class PotholeCheckApiService {
 
         // 요청 본문 구성
         MultiValueMap<String, Object> reqBody = new LinkedMultiValueMap<>();
-        reqBody.add("file", fileResource);
+        reqBody.add("video", fileResource);
 
         return new HttpEntity<>(reqBody, headers);
     }

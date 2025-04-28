@@ -7,4 +7,7 @@ import lombok.ToString;
 @ToString
 public class CheckPotholeResponseDto {
     private Boolean isPothole;
+    private int danger;
+    private int importance;
+    private String[] segments;
 }
