@@ -108,7 +108,7 @@ jobs:
           ./gradlew clean pothole-core:bootJar -x test
           ./gradlew pothole-manager-api:bootJar -x test
           ./gradlew pothole-worker-api:bootJar -x test
-          ./gradlew pothole-detection-consumer:bootJar -x test
+          ./gradlew pothole-detection-api:bootJar -x test
 
       - name: Core jar 파일 업로드
         uses: actions/upload-artifact@v4
