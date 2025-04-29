@@ -18,6 +18,8 @@ jobs:
       MANAGER_APPLICATION_DEV_YML: ${{ secrets.MANAGER_APPLICATION_DEV_YML }}
       WORKER_APPLICATION_YML: ${{ secrets.WORKER_APPLICATION_YML }}
       WORKER_APPLICATION_DEV_YML: ${{ secrets.WORKER_APPLICATION_DEV_YML }}
+      DETECTION_APPLICATION_YML: ${{ secrets.DETECTION_APPLICATION_YML }}
+      DETECTION_APPLICATION_DEV_YML: ${{ secrets.DETECTION_APPLICATION_DEV_YML }}
 
   deploy_manager:
     if: github.event.pull_request.merged == true
