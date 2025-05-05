@@ -179,7 +179,6 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
         if (!(potFltPotMngrServDto.getRoadName().isEmpty() ||
                 potFltPotMngrServDto.getRoadName().isBlank())) {
             List<String> roadCode = roadAddressInfoService.getRoadCodeByRoadName(potFltPotMngrServDto.getRoadName());
-
             potFltPotMngrServDto.initRoadCode(roadCode);
         }
 
