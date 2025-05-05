@@ -1,6 +1,7 @@
 package pothole_solution.core.domain.pothole.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,13 +19,22 @@ public class PotholeQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     public List<Pothole> findByFilter(PotFltPotMngrServDto potFltPotMngrServDto) {
-        return jpaQueryFactory.selectFrom(pothole)
-                .where(
-                        getImportanceFilter(potFltPotMngrServDto.getMinImportance(), potFltPotMngrServDto.getMaxImportance()),
-                        getProgressFilter(potFltPotMngrServDto.getProcessStatus()),
-                        getRoadCodeFilter(potFltPotMngrServDto.getRoadCode())
-                )
-                .fetch();
+        JPAQuery<Pothole> potholeJPAQuery = jpaQueryFactory.selectFrom(pothole);
+        if (potFltPotMngrServDto.getRoadCode().isEmpty()) {
+            // 검색 조건 중 도로명 주소 포함되지 않은 경우
+            potholeJPAQuery.where(
+                    getImportanceFilter(potFltPotMngrServDto.getMinImportance(), potFltPotMngrServDto.getMaxImportance()),
+                    getProgressFilter(potFltPotMngrServDto.getProcessStatus())
+            );
+        } else {
+            // 검색 조건 중 도로명 주소 포함된 경우
+            potholeJPAQuery.where(
+                    getImportanceFilter(potFltPotMngrServDto.getMinImportance(), potFltPotMngrServDto.getMaxImportance()),
+                    getProgressFilter(potFltPotMngrServDto.getProcessStatus()),
+                    getRoadCodeFilter(potFltPotMngrServDto.getRoadCode())
+            );
+        }
+        return potholeJPAQuery.fetch();
     }
 
     private BooleanBuilder getProgressFilter(Progress processStatus) {

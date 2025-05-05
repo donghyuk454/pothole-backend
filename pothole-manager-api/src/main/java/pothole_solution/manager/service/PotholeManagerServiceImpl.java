@@ -175,9 +175,13 @@ public class PotholeManagerServiceImpl implements PotholeManagerService {
 
         potFltPotMngrServDto.changeToAvailableImportance(availableMinImportance, availableMaxImportance);
 
-        List<String> roadCode = roadAddressInfoService.getRoadCodeByRoadName(potFltPotMngrServDto.getRoadName());
+        // 도로명 주소가 비어있을 경우 조회 조건에서 제외(POT-97)
+        if (!(potFltPotMngrServDto.getRoadName().isEmpty() ||
+                potFltPotMngrServDto.getRoadName().isBlank())) {
+            List<String> roadCode = roadAddressInfoService.getRoadCodeByRoadName(potFltPotMngrServDto.getRoadName());
 
-        potFltPotMngrServDto.initRoadCode(roadCode);
+            potFltPotMngrServDto.initRoadCode(roadCode);
+        }
 
         return potholeQueryDslRepository.findByFilter(potFltPotMngrServDto);
     }
