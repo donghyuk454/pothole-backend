@@ -33,6 +33,7 @@ public enum ExceptionStatus {
     NONE_PROGRESS_STATUS_IMG(NOT_FOUND, 4001, "존재하지 않는 진행 상태 이미지입니다."),
     NONE_POTHOLE_HISTORY(NOT_FOUND, 4002, "존재하지 않는 포트홀 기록입니다."),
     NONE_PROGRESS_STATUS(NOT_FOUND, 4003, "존재하지 않는 진행 상태입니다."),
+    NONE_ROAD_ADDRESS(NOT_FOUND, 4004, "도로명 주소를 찾을 수 없습니다."),
 
     // s3 exception
     FAILED_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "포트홀 이미지 업로드에 실패했습니다."),

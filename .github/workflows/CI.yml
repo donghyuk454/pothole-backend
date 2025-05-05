@@ -54,8 +54,8 @@ jobs:
     - name: Pothole Detection application.yml 생성
       shell: bash
       run: |
-        mkdir -p ./pothole-detection-api/src/main/resources
-        cd ./pothole-detection-api/src/main/resources
+        mkdir -p ./pothole-detection/src/main/resources
+        cd ./pothole-detection/src/main/resources
         
         touch ./application.yml
         echo "${{ secrets.DETECTION_APPLICATION_YML }}" > ./application.yml

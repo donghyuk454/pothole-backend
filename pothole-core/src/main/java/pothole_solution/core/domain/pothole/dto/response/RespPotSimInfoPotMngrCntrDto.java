@@ -14,8 +14,7 @@ public class RespPotSimInfoPotMngrCntrDto {
     private double lon;
     private String roadAddress;
     private String roadName;            // 도로명
-    private String roadNumber;          // 도로 번호
-    private String zipCode;             // 우편 번호
+    private String roadCode;          // 도로 번호
     private String thumbnail;
     private Integer importance;
     private Integer dangerous;
@@ -35,8 +34,7 @@ public class RespPotSimInfoPotMngrCntrDto {
         this.lat = pothole.getPoint().getY();
         this.lon = pothole.getPoint().getX();
         this.roadName = pothole.getRoadName();
-        this.roadNumber = pothole.getRoadNumber();
-        this.zipCode = pothole.getZipCode();
+        this.roadCode = pothole.getRoadCode();
         this.roadAddress = pothole.getRoadAddress();
         this.thumbnail = pothole.getThumbnail();
         this.importance = pothole.getImportance();

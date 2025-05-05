@@ -10,7 +10,10 @@ import pothole_solution.core.domain.pothole.dto.request.ReqPotRegPotMngrServDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotDetsInfoPotMngrCntrDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotHistGetPotMngrCntrDto;
 import pothole_solution.core.domain.pothole.dto.response.RespPotSimInfoPotMngrCntrDto;
-import pothole_solution.core.domain.pothole.entity.*;
+import pothole_solution.core.domain.pothole.entity.Pothole;
+import pothole_solution.core.domain.pothole.entity.PotholeHistory;
+import pothole_solution.core.domain.pothole.entity.PotholeHistoryImage;
+import pothole_solution.core.domain.pothole.entity.Progress;
 import pothole_solution.core.domain.pothole.service.RoadAddressSearchService;
 import pothole_solution.core.global.util.response.BaseResponse;
 import pothole_solution.manager.service.PotholeHistoryImageManagerService;
@@ -92,7 +95,13 @@ public class PotholeManagerController {
                                                                                 @RequestParam(value = "potholeProgressStatus", required = false) Progress potholeProgressStatus,
                                                                                 @RequestParam(value = "roadName", required = false) String roadName) {
 
-        List<Pothole> filteredPotholes = potholeManagerService.getFilteredPotholes(new PotFltPotMngrServDto(minImportance, maxImportance, potholeProgressStatus, roadName));
+        List<Pothole> filteredPotholes = potholeManagerService.getFilteredPotholes(PotFltPotMngrServDto.builder()
+                                                                                                       .minImportance(minImportance)
+                                                                                                       .maxImportance(maxImportance)
+                                                                                                       .processStatus(potholeProgressStatus)
+                                                                                                       .roadName(roadName)
+                                                                                                       .build()
+                                                                                  );
 
         return new BaseResponse<>(filteredPotholes.stream()
                                                   .map(RespPotSimInfoPotMngrCntrDto::new)

@@ -6,6 +6,7 @@ import pothole_solution.core.domain.pothole.entity.RoadAddress;
 import pothole_solution.core.domain.pothole.entity.RoadAddressSearchApiResponse;
 
 import static pothole_solution.core.global.exception.CustomException.INVALID_PARAMETER;
+import static pothole_solution.core.global.exception.CustomException.NONE_ROAD_ADDRESS;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,10 @@ public class RoadAddressSearchService {
 
         if (response.getResponse().getStatus().equals("ERROR")) {
             throw INVALID_PARAMETER;
+        }
+
+        if (response.getResponse().getStatus().equals("NOT_FOUND")) {
+            throw NONE_ROAD_ADDRESS;
         }
 
         return response.getResponse().getResult().get(0);

@@ -33,6 +33,7 @@ public class CustomException extends RuntimeException {
     public static final CustomException NONE_PROGRESS_STATUS_IMG        = new CustomException(ExceptionStatus.NONE_PROGRESS_STATUS_IMG);
     public static final CustomException NONE_POTHOLE_HISTORY            = new CustomException(ExceptionStatus.NONE_POTHOLE_HISTORY);
     public static final CustomException NONE_PROGRESS_STATUS            = new CustomException(ExceptionStatus.NONE_PROGRESS_STATUS);
+    public static final CustomException NONE_ROAD_ADDRESS                  = new CustomException(ExceptionStatus.NONE_ROAD_ADDRESS);
 
     // s3 exception
     public static final CustomException FAILED_UPLOAD               = new CustomException(ExceptionStatus.FAILED_UPLOAD);
